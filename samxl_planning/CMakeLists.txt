@@ -36,6 +36,6 @@ target_include_directories(gantry_planning_problem_1
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 # Install the executable(s)
-install(TARGETS ${PROJECT_NAME} DESTINATION lib/${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME} gantry_planning_problem_1 DESTINATION lib/${PROJECT_NAME})
 
 ament_package()
