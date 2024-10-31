@@ -155,10 +155,25 @@ public:
     if (!kin_info.hasGroupJointState(group_name, state_name))
         throw std::runtime_error("Unkown state");
 
-    auto waypoint = tesseract_planning::JointWaypoint();
-    // TODO: fill in waypoint based on GroupState from SRDF
+    // Retrieve the data from the SRDF
+    std::unordered_map<std::string, double> group_joint_state = kin_info.group_states[group_name][state_name];
 
-    // TODO: Reorder JointWaypoint (needed as order might be wrong when retrieved from SRDF)
+    // Convert to vectors
+    std::vector<std::string> joint_names;
+    joint_names.reserve(group_joint_state.size());
+
+    std::vector<double> joint_values;
+    joint_values.reserve(group_joint_state.size());
+
+    for (auto& [name, value] : group_joint_state)
+    {
+      joint_names.push_back(name);
+      joint_values.push_back(value);
+    }
+
+    // Convert to waypoint
+    Eigen::VectorXd eigen_joint_values = Eigen::Map<Eigen::VectorXd>(joint_values.data(), joint_values.size());
+    auto waypoint = tesseract_planning::JointWaypoint(joint_names, eigen_joint_values);
 
     return waypoint;
   }
